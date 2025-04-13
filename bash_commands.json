@@ -1,0 +1,292 @@
+{"command": "alias", "description": "Create an alias"}
+{"command": "apropos", "description": "Search Help manual pages (man -k)"}
+{"command": "apt", "description": "Search for and install software packages (Debian/Ubuntu)"}
+{"command": "apt-get", "description": "Search for and install software packages (Debian/Ubuntu)"}
+{"command": "aptitude", "description": "Search for and install software packages (Debian/Ubuntu)"}
+{"command": "aspell", "description": "Spell Checker"}
+{"command": "at", "description": "Schedule a command to run once at a particular time"}
+{"command": "awk", "description": "Find and Replace text, database sort/validate/index"}
+{"command": "basename", "description": "Strip directory and suffix from filenames"}
+{"command": "base32", "description": "Base32 encode/decode data and print to standard output"}
+{"command": "base64", "description": "Base64 encode/decode data and print to standard output"}
+{"command": "bash", "description": "GNU Bourne-Again SHell"}
+{"command": "bc", "description": "Arbitrary precision calculator language"}
+{"command": "bg", "description": "Send to background"}
+{"command": "bind", "description": "Set or display readline key and function bindings"}
+{"command": "break", "description": "Exit from a loop"}
+{"command": "builtin", "description": "Run a shell builtin"}
+{"command": "bzip2", "description": "Compress or decompress named file(s)"}
+{"command": "cal", "description": "Display a calendar"}
+{"command": "caller", "description": "Return the context of any active subroutine call"}
+{"command": "case", "description": "Conditionally perform a command"}
+{"command": "cat", "description": "Concatenate and print (display) the content of files"}
+{"command": "cd", "description": "Change Directory"}
+{"command": "cfdisk", "description": "Partition table manipulator for Linux"}
+{"command": "chattr", "description": "Change file attributes on a Linux file system"}
+{"command": "chgrp", "description": "Change group ownership"}
+{"command": "chmod", "description": "Change access permissions"}
+{"command": "chown", "description": "Change file owner and group"}
+{"command": "chpasswd", "description": "Update passwords in batch mode"}
+{"command": "chroot", "description": "Run a command with a different root directory"}
+{"command": "chkconfig", "description": "System services (runlevel)"}
+{"command": "cksum", "description": "Print CRC checksum and byte counts"}
+{"command": "clear", "description": "Clear the terminal screen/console (ncurses)"}
+{"command": "clear_console", "description": "Clear the terminal screen/console (bash)"}
+{"command": "cmp", "description": "Compare two files"}
+{"command": "comm", "description": "Compare two sorted files line by line"}
+{"command": "command", "description": "Run a command - ignoring shell functions"}
+{"command": "continue", "description": "Resume the next iteration of a loop"}
+{"command": "cp", "description": "Copy one or more files to another location"}
+{"command": "cpio", "description": "Copy files to and from archives"}
+{"command": "cron", "description": "Daemon to execute scheduled commands"}
+{"command": "crontab", "description": "Schedule a command to run at a later time"}
+{"command": "csplit", "description": "Split a file into context-determined pieces"}
+{"command": "curl", "description": "Transfer data from or to a server"}
+{"command": "cut", "description": "Divide a file into several parts"}
+{"command": "date", "description": "Display or change the date & time"}
+{"command": "dc", "description": "Desk Calculator"}
+{"command": "dd", "description": "Data Duplicator - convert and copy a file, write disk headers, boot records"}
+{"command": "ddrescue", "description": "Data recovery tool"}
+{"command": "declare", "description": "Declare variables and give them attributes"}
+{"command": "df", "description": "Display free disk space"}
+{"command": "diff", "description": "Display the differences between two files"}
+{"command": "diff3", "description": "Show differences among three files"}
+{"command": "dig", "description": "DNS lookup"}
+{"command": "dir", "description": "Briefly list directory contents"}
+{"command": "dircolors", "description": "Colour setup for 'ls'"}
+{"command": "dirname", "description": "Convert a full pathname to just a path"}
+{"command": "dirs", "description": "Display list of remembered directories"}
+{"command": "dos2unix", "description": "Windows/MAC to UNIX text file format converter"}
+{"command": "dmesg", "description": "Print kernel & driver messages"}
+{"command": "dpkg", "description": "Package manager (Debian/Ubuntu)."}
+{"command": "du", "description": "Estimate file space usage"}
+{"command": "echo", "description": "Display message on screen"}
+{"command": "egrep", "description": "Search file(s) for lines that match an extended expression"}
+{"command": "eject", "description": "Eject removable media"}
+{"command": "enable", "description": "Enable and disable builtin shell commands"}
+{"command": "env", "description": "Environment variables"}
+{"command": "ethtool", "description": "Ethernet card settings"}
+{"command": "eval", "description": "Evaluate several commands/arguments"}
+{"command": "exec", "description": "Execute a command"}
+{"command": "exit", "description": "Exit the shell"}
+{"command": "expand", "description": "Convert tabs to spaces"}
+{"command": "export", "description": "Set an environment variable"}
+{"command": "expr", "description": "Evaluate expressions"}
+{"command": "false", "description": "Do nothing, unsuccessfully"}
+{"command": "fdformat", "description": "Low-level format a floppy disk"}
+{"command": "fdisk", "description": "Partition table manipulator for Linux"}
+{"command": "fg", "description": "Send job to foreground"}
+{"command": "fgrep", "description": "Search file(s) for lines that match a fixed string"}
+{"command": "file", "description": "Determine file type"}
+{"command": "find", "description": "Search for files that meet a desired criteria"}
+{"command": "fmt", "description": "Reformat paragraph text"}
+{"command": "fold", "description": "Wrap text to fit a specified width"}
+{"command": "for", "description": "Expand words, and execute commands"}
+{"command": "format", "description": "Format disks or tapes"}
+{"command": "free", "description": "Display memory usage"}
+{"command": "fsck", "description": "File system consistency check and repair"}
+{"command": "ftp", "description": "File Transfer Protocol"}
+{"command": "function", "description": "Define Function Macros"}
+{"command": "fuser", "description": "Identify/kill the process that is accessing a file"}
+{"command": "gawk", "description": "Find and Replace text within file(s)"}
+{"command": "getopts", "description": "Parse positional parameters"}
+{"command": "getfacl", "description": "Get file access control lists"}
+{"command": "grep", "description": "Search file(s) for lines that match a given pattern"}
+{"command": "groupadd", "description": "Add a user security group"}
+{"command": "groupdel", "description": "Delete a group"}
+{"command": "groupmod", "description": "Modify a group"}
+{"command": "groups", "description": "Print group names a user is in"}
+{"command": "gzip", "description": "Compress or decompress named file(s)"}
+{"command": "hash", "description": "Remember the full pathname of a name argument"}
+{"command": "head", "description": "Output the first part of file(s)"}
+{"command": "help", "description": "Display help for a built-in command"}
+{"command": "history", "description": "Command History"}
+{"command": "hostname", "description": "Print or set system name"}
+{"command": "htop", "description": "Interactive process viewer"}
+{"command": "iconv", "description": "Convert the character set of a file"}
+{"command": "id", "description": "Print user and group id\u2019s"}
+{"command": "if", "description": "Conditionally perform a command"}
+{"command": "ifconfig", "description": "Configure a network interface"}
+{"command": "ifdown", "description": "Stop a network interface"}
+{"command": "ifup", "description": "Start a network interface up"}
+{"command": "import", "description": "Capture an X server screen and save the image to file"}
+{"command": "install", "description": "Copy files and set attributes"}
+{"command": "iostat", "description": "Report CPU and i/o statistics"}
+{"command": "ip", "description": "Routing, devices and tunnels"}
+{"command": "jobs", "description": "List active jobs"}
+{"command": "join", "description": "Join lines on a common field"}
+{"command": "kill", "description": "Kill a process by specifying its PID"}
+{"command": "killall", "description": "Kill processes by name"}
+{"command": "klist", "description": "List cached Kerberos tickets"}
+{"command": "less", "description": "Display output one screen at a time"}
+{"command": "let", "description": "Perform arithmetic on shell variables"}
+{"command": "link", "description": "Create a link to a file"}
+{"command": "ln", "description": "Create a symbolic link to a file"}
+{"command": "local", "description": "Create a function variable"}
+{"command": "locate", "description": "Find files"}
+{"command": "login", "description": "Login to the computer"}
+{"command": "logname", "description": "Print current login name"}
+{"command": "logout", "description": "Exit a login shell"}
+{"command": "look", "description": "Display lines beginning with a given string"}
+{"command": "lpc", "description": "Line printer control program"}
+{"command": "lpr", "description": "Print files"}
+{"command": "lprint", "description": "Print a file"}
+{"command": "lprintd", "description": "Delete a print job"}
+{"command": "lprintq", "description": "List the print queue"}
+{"command": "lprm", "description": "Remove jobs from the print queue"}
+{"command": "lsattr", "description": "List file attributes on a Linux second extended file system"}
+{"command": "lsblk", "description": "List block devices"}
+{"command": "ls", "description": "List information about file(s)"}
+{"command": "lsof", "description": "List open files"}
+{"command": "lspci", "description": "List all PCI devices"}
+{"command": "make", "description": "Recompile a group of programs"}
+{"command": "man", "description": "Help manual"}
+{"command": "mapfile", "description": "Read lines from standard input into an indexed array variable"}
+{"command": "md5sum", "description": "Compute and check MD5 message digest"}
+{"command": "mkdir", "description": "Create new folder(s)"}
+{"command": "mkfifo", "description": "Make FIFOs (named pipes)"}
+{"command": "mkfile", "description": "Make a file"}
+{"command": "mkisofs", "description": "Create a hybrid ISO9660/JOLIET/HFS filesystem"}
+{"command": "mknod", "description": "Make block or character special files"}
+{"command": "mktemp", "description": "Make a temporary file"}
+{"command": "more", "description": "Display output one screen at a time"}
+{"command": "most", "description": "Browse or page through a text file"}
+{"command": "mount", "description": "Mount a file system"}
+{"command": "mtools", "description": "Manipulate MS-DOS files"}
+{"command": "mtr", "description": "Network diagnostics (traceroute/ping)"}
+{"command": "mv", "description": "Move or rename files or directories"}
+{"command": "mmv", "description": "Mass Move and rename (files)"}
+{"command": "nc", "description": "Netcat, read and write data across networks"}
+{"command": "netstat", "description": "Networking connections/stats"}
+{"command": "nft", "description": "nftables for packet filtering and classification"}
+{"command": "nice", "description": "Set the priority of a command or job"}
+{"command": "nl", "description": "Number lines and write files"}
+{"command": "nohup", "description": "Run a command immune to hangups"}
+{"command": "notify-send", "description": "Send desktop notifications"}
+{"command": "nslookup", "description": "Query Internet name servers interactively"}
+{"command": "open", "description": "Open a file in its default application"}
+{"command": "op", "description": "Operator access"}
+{"command": "passwd", "description": "Modify a user password"}
+{"command": "paste", "description": "Merge lines of files"}
+{"command": "pathchk", "description": "Check file name portability"}
+{"command": "Perf", "description": "Performance analysis tools for Linux"}
+{"command": "ping", "description": "Test a network connection"}
+{"command": "pgrep", "description": "List processes by name"}
+{"command": "pkill", "description": "Kill processes by name"}
+{"command": "popd", "description": "Restore the previous value of the current directory"}
+{"command": "pr", "description": "Prepare files for printing"}
+{"command": "printcap", "description": "Printer capability database"}
+{"command": "printenv", "description": "Print environment variables"}
+{"command": "printf", "description": "Format and print data"}
+{"command": "ps", "description": "Process status"}
+{"command": "pushd", "description": "Save and then change the current directory"}
+{"command": "pv", "description": "Monitor the progress of data through a pipe"}
+{"command": "pwd", "description": "Print Working Directory"}
+{"command": "quota", "description": "Display disk usage and limits"}
+{"command": "quotacheck", "description": "Scan a file system for disk usage"}
+{"command": "ram", "description": "ram disk device"}
+{"command": "rar", "description": "Archive files with compression"}
+{"command": "rcp", "description": "Copy files between two machines"}
+{"command": "read", "description": "Read a line from standard input"}
+{"command": "readarray", "description": "Read from stdin into an array variable"}
+{"command": "readonly", "description": "Mark variables/functions as readonly"}
+{"command": "reboot", "description": "Reboot the system"}
+{"command": "rename", "description": "Rename files"}
+{"command": "renice", "description": "Alter priority of running processes"}
+{"command": "remsync", "description": "Synchronize remote files via email"}
+{"command": "return", "description": "Exit a shell function"}
+{"command": "rev", "description": "Reverse lines of a file"}
+{"command": "rm", "description": "Remove files"}
+{"command": "rmdir", "description": "Remove folder(s)"}
+{"command": "rsync", "description": "Remote file copy (Synchronize file trees)"}
+{"command": "screen", "description": "Multiplex terminal, run remote shells via ssh"}
+{"command": "scp", "description": "Secure copy (remote file copy)"}
+{"command": "sdiff", "description": "Merge two files interactively"}
+{"command": "sed", "description": "Stream Editor"}
+{"command": "select", "description": "Accept user choices via keyboard input"}
+{"command": "seq", "description": "Print numeric sequences"}
+{"command": "set", "description": "Manipulate shell variables and functions"}
+{"command": "setfacl", "description": "Set file access control lists."}
+{"command": "sftp", "description": "Secure File Transfer Program"}
+{"command": "sha256sum", "description": "Compute and check SHA256 (256-bit) checksums"}
+{"command": "shift", "description": "Shift positional parameters"}
+{"command": "shopt", "description": "Shell Options"}
+{"command": "shuf", "description": "Generate random permutations"}
+{"command": "shutdown", "description": "Shutdown or restart Linux"}
+{"command": "sleep", "description": "Delay for a specified time"}
+{"command": "slocate", "description": "Find files"}
+{"command": "sort", "description": "Sort text files"}
+{"command": "source", "description": "Run commands from a file '.'"}
+{"command": "split", "description": "Split a file into fixed-size pieces"}
+{"command": "ss", "description": "Socket Statistics"}
+{"command": "ssh", "description": "Secure Shell client (remote login program)"}
+{"command": "stat", "description": "Display file or file system status"}
+{"command": "strace", "description": "Trace system calls and signals"}
+{"command": "su", "description": "Substitute user identity"}
+{"command": "sudo", "description": "Execute a command as another user"}
+{"command": "sum", "description": "Print a checksum for a file"}
+{"command": "suspend", "description": "Suspend execution of this shell"}
+{"command": "sync", "description": "Synchronize data on disk with memory"}
+{"command": "tabs", "description": "Set tabs on a terminal"}
+{"command": "tail", "description": "Output the last part of a file"}
+{"command": "tar", "description": "Store, list or extract files in an archive"}
+{"command": "tee", "description": "Redirect output to multiple files"}
+{"command": "test", "description": "Evaluate a conditional expression"}
+{"command": "time", "description": "Measure Program running time"}
+{"command": "timeout", "description": "Run a command with a time limit"}
+{"command": "times", "description": "User and system times"}
+{"command": "tmux", "description": "Terminal multiplexer"}
+{"command": "touch", "description": "Change file timestamps"}
+{"command": "top", "description": "List processes running on the system"}
+{"command": "tput", "description": "Set terminal-dependent capabilities, colour, position"}
+{"command": "traceroute", "description": "Trace Route to Host"}
+{"command": "trap", "description": "Execute a command when the shell receives a signal"}
+{"command": "tr", "description": "Translate, squeeze, and/or delete characters"}
+{"command": "true", "description": "Do nothing, successfully"}
+{"command": "tsort", "description": "Topological sort"}
+{"command": "tty", "description": "Print filename of terminal on stdin"}
+{"command": "type", "description": "Describe a command"}
+{"command": "ulimit", "description": "Limit user resources"}
+{"command": "umask", "description": "Users file creation mask"}
+{"command": "umount", "description": "Unmount a device"}
+{"command": "unalias", "description": "Remove an alias"}
+{"command": "uname", "description": "Print system information"}
+{"command": "unexpand", "description": "Convert spaces to tabs"}
+{"command": "uniq", "description": "Uniquify files"}
+{"command": "units", "description": "Convert units from one scale to another"}
+{"command": "unix2dos", "description": "UNIX to Windows or MAC text file format converter"}
+{"command": "unrar", "description": "Extract files from a rar archive"}
+{"command": "unset", "description": "Remove variable or function names"}
+{"command": "unshar", "description": "Unpack shell archive scripts"}
+{"command": "until", "description": "Execute commands (until error)"}
+{"command": "uptime", "description": "Show uptime"}
+{"command": "useradd", "description": "Create new user account"}
+{"command": "userdel", "description": "Delete a user account"}
+{"command": "usermod", "description": "Modify user account"}
+{"command": "users", "description": "List users currently logged in"}
+{"command": "uuencode", "description": "Encode a binary file"}
+{"command": "uudecode", "description": "Decode a file created by uuencode"}
+{"command": "v", "description": "Verbosely list directory contents ('ls -l -b')"}
+{"command": "vdir", "description": "Verbosely list directory contents ('ls -l -b')"}
+{"command": "vi", "description": "Text Editor"}
+{"command": "vmstat", "description": "Report virtual memory statistics"}
+{"command": "w", "description": "Show who is logged on and what they are doing"}
+{"command": "wait", "description": "Wait for a process to complete"}
+{"command": "watch", "description": "Execute/display a program periodically"}
+{"command": "wc", "description": "Print byte, word, and line counts"}
+{"command": "whereis", "description": "Search the user\u2019s $path, man pages and source files for a program"}
+{"command": "which", "description": "Search the user\u2019s $path for a program file"}
+{"command": "while", "description": "Execute commands"}
+{"command": "who", "description": "Print all usernames currently logged in"}
+{"command": "whoami", "description": "Print the current user id and name ('id -un')"}
+{"command": "wget", "description": "Retrieve web pages or files via HTTP, HTTPS or FTP"}
+{"command": "write", "description": "Send a message to another user"}
+{"command": "xargs", "description": "Execute utility, passing constructed argument list(s)"}
+{"command": "xdg-open", "description": "Open a file or URL in the user\u2019s preferred application."}
+{"command": "xxd", "description": "Make a hexdump or do the reverse"}
+{"command": "xz", "description": "Compress or decompress .xz and .lzma files"}
+{"command": "yes", "description": "Print a string until interrupted"}
+{"command": "zip", "description": "Package and compress (archive) files"}
+{"command": ".", "description": "Run a command script in the current shell"}
+{"command": "!!", "description": "Run the last command again"}
+{"command": "#", "description": "Comment / Remark"}
