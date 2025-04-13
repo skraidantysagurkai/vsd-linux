@@ -70,11 +70,8 @@ def get_features(logs, log_indexes):
                               'timestamp': logs[event_idx]['timestamp'],
                               'log_count': (inter_idx - start_idx + 1),
                               'avg_cwd_risk_score': avg_cwd_risk_score,
-                              'sum_cwd_risk_score': sum_cwd_risk_score,
                               'avg_arg_count': avg_arg_count,
-                              'sum_arg_count': sum_arg_count,
                               'avg_flag_count': avg_flag_count,
-                              'sum_flag_count': sum_flag_count,
                               'bash_count': bash_count})
         
     return event_metrics
