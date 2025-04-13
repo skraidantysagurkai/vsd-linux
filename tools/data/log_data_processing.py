@@ -1,12 +1,15 @@
 import argparse
 from pathlib import Path
-from src.shared.logger import setup_logger
+
 import pandas as pd
+
+from src.shared.logger import setup_logger
 
 logger = setup_logger("info")
 
 import re
 import json
+
 
 def parse_audit_log(log):
 	data = {}
@@ -49,10 +52,12 @@ def parse_audit_log(log):
 
 	return data
 
+
 def write_json_long(data: list, output_file):
 	with open(output_file, 'w') as f:
 		for item in data:
 			f.write(json.dumps(item) + '\n')
+
 
 def process_data(input_dir, output_dir):
 	i = 0
@@ -66,7 +71,7 @@ def process_data(input_dir, output_dir):
 		logs = [i for i in logs if i['command'] is not None]
 		if len(logs) == 0:
 			continue
-		processed_data = [{"id": i+1, "target": t, "content": l} for i, (t, l) in enumerate(zip(target, logs))]
+		processed_data = [{"id": i + 1, "target": t, "content": l} for i, (t, l) in enumerate(zip(target, logs))]
 		output_file = output_dir / f'{file.stem}.json'
 		write_json_long(processed_data, output_file)
 		logger.info(f"Processed {file.name}, contains {sum(target)} malicious logs")
@@ -80,6 +85,7 @@ def args_parser():
 	parser.add_argument('input_dir', type=str, help='The input directory containing data files')
 	parser.add_argument('output_dir', type=str, help='The output directory to save processed data')
 	return parser.parse_args()
+
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Process some data.')
