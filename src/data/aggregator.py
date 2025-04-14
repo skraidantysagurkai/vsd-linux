@@ -23,7 +23,7 @@ def get_labels():
 		'embedded_command'
 	]
 
-	return five_min_labels + thirty_sec_labels + event_labels
+	return event_labels + thirty_sec_labels + five_min_labels
 
 class DataAggregator:
 	def __init__(self, pca_path: str, num_jobs: int, window_sizes_sec: tuple = (30, 300)):
