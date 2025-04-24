@@ -61,19 +61,19 @@ class DataAggregator:
 		log_time = float(sus_log['timestamp'])
 		inter_idx = sus_idx
 		start_idx = sus_idx
-
-		for i in range(sus_idx - 1, -1, -1):
-	        check_time = float(logs[i]['timestamp'])
-	        delta = log_time - check_time
 	
-	        if delta <= self.window_one and i <= inter_idx:
-	            inter_idx = i
-	        if delta <= self.window_two and i <= start_idx:
-	            start_idx = i
-	        else:
-	            break
+		for i in range(sus_idx - 1, -1, -1):
+			check_time = float(logs[i]['timestamp'])
+			delta = log_time - check_time
+		
+			if delta <= self.window_one and i <= inter_idx:
+			    inter_idx = i
+			if delta <= self.window_two and i <= start_idx:
+			    start_idx = i
+			else:
+		    break
 	            
-	    return (start_idx, inter_idx, sus_idx)
+		return (start_idx, inter_idx, sus_idx)
 
 	def compute_window_metrics(self, window, default_dim=10):
 		if not window:
