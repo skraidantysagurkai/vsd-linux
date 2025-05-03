@@ -31,6 +31,12 @@ def get_labels():
 
     return event_command_labels + event_feature_labels + thirty_sec_command_labels + thirty_sec_feature_labels + five_min_command_labels + five_min_feature_labels
 
+def get_selected_labels():
+    labels = get_labels()
+    idxs = [25, 15, 11, 18, 19, 20, 21, 16, 14, 13, 12, 26, 17, 0, 6, 27, 32, 42, 33, 9, 7, 4, 2, 43, 5, 38, 3, 1, 8]
+    selected_labels = [labels[i] for i in idxs]
+    return selected_labels
+
 COLUMNS = ["timestamp", "success", "pid", "cwd_risk", "is_bash_command", "flag_count", "args_count", "embedded_command"]
 
 class DataAggregatorAccelerated:

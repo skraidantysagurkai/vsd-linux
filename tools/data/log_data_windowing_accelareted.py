@@ -23,9 +23,8 @@ def main(input_dir, output_dir, pca_path, num_jobs, cpu_batch_size, gpu_batch_si
 			sub_dataset = [i.get('content') for i in sub_dataset]
 			results = []
 			for i, target, log in zip(ids, targets, event_feature_extractor.get_features(sub_dataset)):
-				results.append({"id": i, "target": target, "content": log})
+				results.append({"id": i, "target": target, "content": log[0]})
 				if len(results) >= 1000:
-					print(results[0]["content"])
 					write_json_long(results, output_file)
 					results = []
 			if len(results) > 0:
