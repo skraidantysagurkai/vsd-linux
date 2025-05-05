@@ -2,6 +2,7 @@ import numpy as np
 import joblib
 from joblib import Parallel, delayed
 
+
 def get_labels():
     agg_labels = [
         'log_count',
@@ -23,6 +24,7 @@ def get_labels():
     ]
 
     return event_labels + five_min_labels + thirty_sec_labels
+
 
 class DataAggregator:
     def __init__(self, pca_path: str, num_jobs: int, window_sizes_sec: tuple = (30, 300)):
@@ -54,6 +56,26 @@ class DataAggregator:
 
             log_indexes.append((start_idx, inter_idx, idx))
         return log_indexes
+
+    def find_idx_for_log(self, logs, sus_log):
+        sus_idx = len(logs) + 1
+        log_time = float(sus_log['timestamp'])
+        inter_idx = sus_idx
+        start_idx = sus_idx
+
+        for i in range(sus_idx - 1, -1, -1):
+            check_time = float(logs[i]['timestamp'])
+            delta = log_time - check_time
+
+            if delta <= self.window_one and i <= inter_idx:
+                inter_idx = i
+            if delta <= self.window_two and i <= start_idx:
+                start_idx = i
+            else:
+                pass
+        break
+
+        return (start_idx, inter_idx, sus_idx)
 
     def compute_window_metrics(self, window, default_dim=10):
         if not window:
