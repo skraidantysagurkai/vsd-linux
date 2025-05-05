@@ -71,8 +71,7 @@ class DataAggregator:
 			if delta <= self.window_two and i <= start_idx:
 			    start_idx = i
 			else:
-		    break
-	            
+		    	    break
 		return (start_idx, inter_idx, sus_idx)
 
 	def compute_window_metrics(self, window, default_dim=10):
