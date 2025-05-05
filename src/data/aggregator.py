@@ -34,6 +34,7 @@ class DataAggregator:
         self.window_one = window_sizes_sec[0]
         self.window_two = window_sizes_sec[1] + self.window_one
 
+
     def find_idx(self, logs):
         log_indexes = []
 
@@ -57,6 +58,7 @@ class DataAggregator:
             log_indexes.append((start_idx, inter_idx, idx))
         return log_indexes
 
+
     def find_idx_for_log(self, logs, sus_log):
         sus_idx = len(logs) + 1
         log_time = float(sus_log['timestamp'])
@@ -74,6 +76,7 @@ class DataAggregator:
             else:
                 break
         return (start_idx, inter_idx, sus_idx)
+
 
     def compute_window_metrics(self, window, default_dim=10):
         if not window:
@@ -102,6 +105,7 @@ class DataAggregator:
             len(set(i['pid'] for i in window)),
             transformed_command
         )
+
 
     def process_single_event(self, logs, idx_tuple):
         start_idx, inter_idx, event_idx = idx_tuple
@@ -134,6 +138,7 @@ class DataAggregator:
         return tuple(
             event_metrics + five_min_metrics + thirty_sec_metrics
         )
+
 
     def get_features(self, logs, log_indexes):
         return Parallel(n_jobs=self.num_jobs)(
