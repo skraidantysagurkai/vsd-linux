@@ -55,19 +55,6 @@ X_train_gpu = torch.from_numpy(np.array(X_train)).to(device)
 y_train_gpu = torch.from_numpy(np.array(y_train)).to(device)
 X_test_gpu = torch.from_numpy(np.array(X_test)).to(device)
 
-# Define parameter grid
-param_grid = {
-    "n_estimators": [100, 200, 300],
-    "max_depth": [3, 5, 7, 10],
-    "learning_rate": [0.01, 0.05, 0.1],
-    "subsample": [0.6, 0.8, 1.0],
-    "colsample_bytree": [0.6, 0.8, 1.0],
-    "gamma": [0, 0.1, 0.5],
-    "reg_alpha": [0, 0.1, 1],
-    "reg_lambda": [1, 1.5, 3],
-    "min_child_weight": [1, 3, 5]
-}
-
 param_grid = {
     "n_estimators": [100, 200, 300],
     "max_depth": [3, 7],
