@@ -5,6 +5,7 @@ from src.data.aggregator import DataAggregator
 from src.shared.json_tools import load_json_long, write_json_long
 from src.shared.logger import setup_logger
 from src.data.splitter import split_dataset_by_uid
+import time
 
 logger = setup_logger("info")
 
@@ -51,5 +52,6 @@ if __name__ == '__main__':
 
 	if not output_dir.exists():
 		output_dir.mkdir(parents=True, exist_ok=True)
-
+	now = time.time()
 	main(input_dir, output_dir, pca_path, num_jobs)
+	print(f"Total time taken: {time.time() - now} seconds")
