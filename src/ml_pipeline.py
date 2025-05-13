@@ -1,19 +1,16 @@
 import pickle
-import numpy as np
-import xgboost as xgb
 from transformers import AutoTokenizer, AutoModel
 import torch
 import joblib
-from typing import List
+from src.data.features.event_feature_extractor import EventFeatureExtractor
+from src.shared.log_check import Log
 
-class MLFilterPipeline:
+class MlPipeline:
     def __init__(self, 
-                 codebert_model_name='microsoft/codebert-base',
                  pca_path='pca_model.pkl', 
                  xgboost_path='xgboost_model.pkl'):
 
-        self.tokenizer = AutoTokenizer.from_pretrained(codebert_model_name)
-        self.codebert_model = AutoModel.from_pretrained(codebert_model_name)
+        self.feature_extractor = EventFeatureExtractor()
         
         with open(pca_path, 'rb') as f:
             self.pca_model = joblib.load(f)
@@ -39,18 +36,9 @@ class MLFilterPipeline:
         prediction = self.xgboost_model.predict(pca_features)
         
         return prediction[0]
-
     
-    
-def main():
-
-    ml_filter = MLFilterPipeline(
-        codebert_model_name='microsoft/codebert-base',
-        pca_path= 'models/pca_model.pkl',
-        xgboost_path= 'models/xgboost_model.pkl'
-    )
-    print(ml_filter.pca_model.n_components_)
-    # print(f"Prediction result: {result}")
+    def embed_log(self, log: Log):
+        self.feature_extractor.embed_command(log['command'])
 
 if __name__ == "__main__":
     main()

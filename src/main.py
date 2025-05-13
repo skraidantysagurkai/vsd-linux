@@ -3,20 +3,8 @@ from pydantic import BaseModel
 from typing import List, Optional
 from pymongo import MongoClient
 from datetime import datetime, timedelta
+from src.shared.log_check import Log
 
-class Log(BaseModel):
-    timestamp: str
-    success: int
-    uid: str
-    euid: str 
-    syscall: str
-    ppid: str
-    pid: str
-    command: str
-    arguments: Optional[List[str]]
-    CWD: Optional[str]
-    
-    
 class MlAPI:
     def __init__(self):
         self.app = FastAPI()
@@ -35,16 +23,18 @@ class MlAPI:
         result_30 = list(self.embedded_collection.aggregate(pipeline_30))
         result_300 = list(self.embedded_collection.aggregate(pipeline_300))
         
-        
-    
-    def save_log_to_mongo(self, log: Log):
-        log_dict = log.model_dump_json()
-        self.collection.insert_one(log_dict)
-
     def accept_request(self):
         @self.app.post("/predict")
         def predict(log: Log):
-            pass
+            self.save_log_to_db(log)
+            
+    def save_log_to_db(self, log: Log):
+        log_dict = log.model_dump_json()
+        # save not embeded log
+        self.log_collection.insert_one(log_dict)
+        
+        # save embedded log
+        self.embedded_collection.insert_one()
         
     @staticmethod
     def contruct_pipeline(log: dict, time: int) -> List[dict]:
