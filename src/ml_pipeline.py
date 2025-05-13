@@ -4,11 +4,14 @@ import torch
 import joblib
 from src.data.features.event_feature_extractor import EventFeatureExtractor
 from src.shared.log_check import Log
+from paths import MODEL_DIR
+import os
+
 
 class MlPipeline:
     def __init__(self, 
-                 pca_path='pca_model.pkl', 
-                 xgboost_path='xgboost_model.pkl'):
+                 pca_path=os.path.join(MODEL_DIR,'pca_model.pkl'), 
+                 xgboost_path=os.path.join(MODEL_DIR, 'xgboost_model.pkl')):
 
         self.feature_extractor = EventFeatureExtractor()
         
@@ -39,6 +42,3 @@ class MlPipeline:
     
     def embed_log(self, log: Log):
         self.feature_extractor.embed_command(log['command'])
-
-if __name__ == "__main__":
-    main()
