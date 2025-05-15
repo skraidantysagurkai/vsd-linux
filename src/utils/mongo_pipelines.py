@@ -1,7 +1,6 @@
 from typing import List
-from src.shared.log_check import Log
 
-def embeded_pipeline(log: Log, time: int) -> List[dict]:
+def embeded_pipeline(log: dict, time: int) -> List[dict]:
     pipeline = [
         {"$match": {
             "uid": log["uid"],
@@ -15,7 +14,7 @@ def embeded_pipeline(log: Log, time: int) -> List[dict]:
     
     return pipeline
 
-def thirthy_sec_pipeline(log: Log):
+def thirthy_sec_pipeline(log: dict):
     thirty_sec_pipeline= [
         {"$match": {
             "uid": log["uid"],
@@ -45,7 +44,7 @@ def thirthy_sec_pipeline(log: Log):
     
     return thirty_sec_pipeline
 
-def five_min_pipeline(log: Log):
+def five_min_pipeline(log: dict):
     five_min_pipeline = [
         {"$match": {
             "uid": log["uid"],

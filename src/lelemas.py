@@ -1,4 +1,6 @@
 from openai import OpenAI
+from typing import List
+
 SYSTEM_PROMPT = """
 You are a helpful assistant. Provide an answer if this command is malicious or not, based on the command and the user log history, timestamps are in unix time.
 If the command is malicious answer with 1, if not answer with 0. There can only be two answers: 1 or 0.
@@ -14,7 +16,7 @@ class LLM():
             api_key=token,
         )
         
-    def classify_log(self, log:str):
+    def classify_log(self, log:dict, user_history: List[dict]) -> dict:
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=[
@@ -24,7 +26,7 @@ class LLM():
                 },
                 {
                     "role": "user",
-                    "content": log,
+                    "content": f'Command {log} \n User history: {user_history}',
                 }
             ],
             temperature=0

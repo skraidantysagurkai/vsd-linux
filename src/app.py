@@ -1,23 +1,7 @@
-from pydantic import BaseModel
 from fastapi import FastAPI
 from lelemas import LLM 
-from typing import List, Optional
 
-class Log(BaseModel):
-    timestamp: str
-    success: int
-    uid: str
-    euid: str 
-    syscall: str
-    ppid: str
-    pid: str
-    command: str
-    arguments: Optional[List[str]]
-    CWD: Optional[str]
-    
-class LogPrompt(BaseModel):
-    command: Log
-    history: List[Log]
+from src.shared.log_check import Log, LogPrompt
 
 class LogAPI:
     def __init__(self, model_name: str):

@@ -1,28 +1,33 @@
 from fastapi import FastAPI
-from typing import List, Optional
+from typing import List
 from pymongo import MongoClient
-from datetime import datetime, timedelta
+from lelemas import LLM 
 import numpy as np
 
 from src.shared.log_check import Log
 from src.ml_pipeline import MlPipeline
 from src.utils.mongo_pipelines import embeded_pipeline, thirthy_sec_pipeline, five_min_pipeline
 
-class MlAPI:
+class IdentificationPipeline:
     def __init__(self):
         self.app = FastAPI()
         self.client = MongoClient("mongodb://localhost:27017/")
         self.ml_pipeline = MlPipeline()
+        self.llm = LLM(model_name="openai/gpt-4o")
         db = self.client["ml_logs"]
         self.log_collection = db["logs"]
         self.embedded_collection = db["embedded_logs"]
         
+        self.accept_request()
+        
     def accept_request(self):
         @self.app.post("/predict")
         def predict(log: Log):
+            log = log.model_dump_json()
+            
             current_embed = self.save_log_to_db(log)
             current_embed = self.ml_pipeline.pca_model.transform(current_embed)
-            features = self.get_history_features(log)
+            features = self.get_features_history(log)
             features['cur_event_avg_embedded_command_0'] = current_embed[0]
             features['cur_event_avg_embedded_command_6'] = current_embed[6]
             features['cur_event_avg_embedded_command_9'] = current_embed[9]
@@ -37,14 +42,23 @@ class MlAPI:
             features_list = self.unpack_features_to_list(features)
             prediction = self.ml_pipeline.predict(features_list)
             
+            # implement logic for prediction
+            if prediction == 1:
+                user_history = self.get_user_history(log)
             
-    def get_history_features(self, log: Log):
-        
-        log_dict = log.model_dump_json()
+                # llm_response = self.llm.classify_log(log.model_dump_json())
+                # return {
+                #     "response": response,
+                # }
+                
+                # call SLACK ADMIN!
+            return
+            
+    def get_features_history(self, log: dict):
         # 30 seconds window
-        pipeline_30 = embeded_pipeline(log_dict, 30)
+        pipeline_30 = embeded_pipeline(log, 30)
         # 300 seconds window
-        pipeline_300 = embeded_pipeline(log_dict, 300)
+        pipeline_300 = embeded_pipeline(log, 300)
 
         result_raw_30 = [np.array(doc['features']) for doc in self.embedded_collection.aggregate(pipeline_30)]
         result_raw_300 = [np.array(doc['features']) for doc in self.embedded_collection.aggregate(pipeline_300)]
@@ -66,11 +80,24 @@ class MlAPI:
         
         return features_dict
                 
-    def save_log_to_db(self, log: Log) -> List[int]:
-        log_dict = log.model_dump_json()
+    def get_user_history(self, log: dict) -> List[dict]:
+        pipeline = [
+            {"$match": {
+                "uid": log["uid"],
+                "timestamp": {"$gte": log['timestamp'] - 300, "$lte": log['timestamp']}
+            }},
+            {"$sort": {"timestamp": -1}}
+        ]
+        
+        result = self.embedded_collection.aggregate(pipeline)
+        
+        return result
+                        
+
+    def save_log_to_db(self, log: dict) -> List[int]:
         # save not embeded log
-        log_dict["arg_count"] = len(log_dict["arguments"]) if log_dict["arguments"] else 0
-        self.log_collection.insert_one(log_dict)
+        log["arg_count"] = len(log["arguments"]) if log["arguments"] else 0
+        self.log_collection.insert_one(log)
         
         embedded_command = self.ml_pipeline.feature_extractor.embed_log([log['command']])
         
@@ -158,5 +185,5 @@ class MlAPI:
     
     
                 
-ml_api = MlAPI()
+ml_api = IdentificationPipeline()
 app = ml_api.app
