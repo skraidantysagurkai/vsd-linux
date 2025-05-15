@@ -7,6 +7,7 @@ class Log(BaseModel):
     uid: str
     pid: str
     command: str
+    is_bash: int
     arguments: Optional[List[str]]
     
     

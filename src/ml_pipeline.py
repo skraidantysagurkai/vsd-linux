@@ -21,12 +21,8 @@ class MlPipeline:
             self.xgboost_model = pickle.load(f)
     
     
-    def predict(self, code_snippet):
-        codebert_features = self.feature_extractor.embed_command([code_snippet])
-        
-        pca_features = self.pca_model.transform(codebert_features)
-        
-        prediction = self.xgboost_model.predict(pca_features)
+    def predict(self, features):
+        prediction = self.xgboost_model.predict(features)
         
         return prediction[0]
 
