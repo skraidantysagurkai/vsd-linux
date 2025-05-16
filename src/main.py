@@ -23,6 +23,7 @@ class IdentificationPipeline:
     def accept_request(self):
         @self.app.post("/predict")
         def predict(log: Log):
+            # implement edge cases when there is no history
             log = log.model_dump_json()
             
             current_embed = self.save_log_to_db(log)
