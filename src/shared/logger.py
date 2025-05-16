@@ -1,7 +1,5 @@
 import logging
-
 import torch
-
 
 def setup_logger(log_level):
 	global logger

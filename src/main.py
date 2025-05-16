@@ -7,6 +7,9 @@ import numpy as np
 from src.shared.log_check import Log
 from src.ml_pipeline import MlPipeline
 from src.utils.mongo_pipelines import embeded_pipeline, thirthy_sec_pipeline, five_min_pipeline
+from src.shared.logger import setup_logger
+
+logger = setup_logger('info')
 
 class IdentificationPipeline:
     def __init__(self):
@@ -14,7 +17,7 @@ class IdentificationPipeline:
         self.client = MongoClient("mongodb://localhost:27017/")
         self.ml_pipeline = MlPipeline()
         self.llm = LLM(model_name="openai/gpt-4o")
-        db = self.client["ml_logs"]
+        db = self.client["kursinis"]
         self.log_collection = db["logs"]
         self.embedded_collection = db["embedded_logs"]
         
@@ -63,6 +66,7 @@ class IdentificationPipeline:
 
         result_raw_30 = [np.array(doc['features']) for doc in self.embedded_collection.aggregate(pipeline_30)]
         result_raw_300 = [np.array(doc['features']) for doc in self.embedded_collection.aggregate(pipeline_300)]
+        
         
         # get thirty sec and five min aggregated features
         thirty_sec_features = self.log_collection.aggregate(thirthy_sec_pipeline(log))

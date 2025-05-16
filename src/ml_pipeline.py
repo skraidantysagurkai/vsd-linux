@@ -13,9 +13,13 @@ class MlPipeline:
                  xgboost_path=os.path.join(MODEL_DIR, 'xgboost_model.pkl')):
 
         self.feature_extractor = EventFeatureExtractor()
-        
-        with open(pca_path, 'rb') as f:
-            self.pca_model = joblib.load(f)
+        try:
+            with open(pca_path, 'rb') as f:
+                self.pca_model = joblib.load(f)
+        except Exception as e:
+            import traceback
+            print("Exceotion while loading pca model occured", e)
+            traceback.print_exc()
 
         with open(xgboost_path, 'rb') as f:
             self.xgboost_model = pickle.load(f)
