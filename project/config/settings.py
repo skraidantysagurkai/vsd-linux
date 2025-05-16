@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     MONGODB_LOG_COLLECTION: str = "logs"
     MONGODB_EMBEDDED_COLLECTION: str = "embedded_logs"
     
-    EMBEDDING_DIM: int = 
+    EMBEDDING_DIM: int = 768
     
     PCA_MODEL_PATH: str = os.path.join(MODEL_DIR, 'pca_model.pkl')
     XGBOOST_MODEL_PATH: str = os.path.join(MODEL_DIR, 'xgboost_model.pkl')
