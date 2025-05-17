@@ -28,7 +28,7 @@ class Database:
         if not result:
             return 
         
-        return result
+        return list(result)
         
     def insert_into_db(self, data:dict, type:str):
         if type == 'regular':

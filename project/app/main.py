@@ -43,6 +43,8 @@ class PredictionAPI:
 
             print(prediction)
             
+            # if malicious command predicted call llm for further examination
+            
             return
     
     def get_features_history(self, log: dict) -> dict:

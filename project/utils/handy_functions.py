@@ -6,12 +6,13 @@ from typing import List
 
 def add_full_command_to_log(log:dict)-> dict:
     command = log['command']
-    if log['args']:
-        args = ' '.join(log['args'])
+    if log['arguments']:
+        args = ' '.join(log['arguments'])
     else:
         args = ''
         
-    log['full_command'] = command + args
+    log['full_command'] = command +' '+ args
+    
     return log
 
 def construct_features(thirty_sec_features, five_min_features,

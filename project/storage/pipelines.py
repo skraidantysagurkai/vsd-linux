@@ -22,13 +22,13 @@ def thirthy_sec_pipeline(log: dict):
         }},
         {"$group": {
             "_id": None,
-            "_id": "$pid",
             "log_count": {"$sum": 1},
             "success_rate": {"$avg": "$success"},
             "total": {"$sum": 1},
             "bash_commands": {"$sum": {"$cond": [{"$eq": ["$is_bash", 1]}, 1, 0]}}
         }},
         {"$project": {
+            "_id": 0,
             "pid": "$_id",
             "log_count": 1,
             "success_rate": 1,
@@ -57,6 +57,7 @@ def five_min_pipeline(log: dict):
             "bash_commands": {"$sum": {"$cond": [{"$eq": ["$is_bash", 1]}, 1, 0]}}
         }},
         {"$project": {
+            "_id": 0,
             "log_count": 1,
             "success_rate": 1,
             "bash_ratio": {
