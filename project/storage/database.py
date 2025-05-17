@@ -1,7 +1,11 @@
 from pymongo import MongoClient
-from project.config.settings import settings
-from typing import List
+from typing import List, Optional
 import numpy as np
+import logging
+
+from project.config.settings import settings
+
+logger = logging.getLogger(__name__)
 
 class Database:
     def __init__(self):
@@ -15,6 +19,7 @@ class Database:
         result = self.embedded_collection.aggregate(pipeline)
         
         if not result:
+            logger.warning('No embedded hisotry found in database')
             return np.zeros((1, settings.EMBEDDING_DIM))[0]  
     
         array_of_embeds = [np.array(doc['features']) for doc in result]
@@ -22,10 +27,11 @@ class Database:
         return array_of_embeds
     
     
-    def get_regular_features(self, pipeline:List) -> List:
+    def get_regular_features(self, pipeline:List) -> Optional[List]:
         result = self.log_collection.aggregate(pipeline)
         
         if not result:
+            logger.warning('No log history found in the database')
             return 
         
         return list(result)
@@ -33,10 +39,12 @@ class Database:
     def insert_into_db(self, data:dict, type:str):
         if type == 'regular':
             self.log_collection.insert_one(data)
+            logger.info('Log inserted into regular database')
             return
             
         if type == 'embedded':
             self.embedded_collection.insert_one(data)
+            logger.info('Log inserted into embedded database')
             return
         
 db = Database()

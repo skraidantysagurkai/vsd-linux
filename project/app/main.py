@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from typing import List
 import numpy as np
 import json
+import logging
 
 from project.app.models import Log
 from project.ml.pipeline import MlPipeline
@@ -9,6 +9,7 @@ from project.storage.database import db
 from project.utils.handy_functions import *
 from project.storage.pipelines import embedded_pipeline, thirthy_sec_pipeline, five_min_pipeline
 
+logger = logging.getLogger(__name__)
 
 class PredictionAPI:
     def __init__(self):
@@ -26,11 +27,11 @@ class PredictionAPI:
             -> get log's user command history features -> construct feature list -> predict 
             """
             log_dict = json.loads(log.model_dump_json())
-        
+            logger.info("Recieved log")
             log_dict = add_full_command_to_log(log_dict)
             
             # self.db.insert_into_db(log_dict, 'regular')
-            
+            logger.info("Embedding recieved logs command")
             current_embed = self.ml_pipeline.feature_extractor.embed_command([log_dict['full_command']])
             current_embed = self.ml_pipeline.transform_features(current_embed[0])
             
@@ -49,27 +50,30 @@ class PredictionAPI:
             return
     
     def get_features_history(self, log: dict) -> dict:
-        result_raw_30 = [np.array(doc['features']) for doc in self.db.embedded_collection.aggregate(embedded_pipeline(log, 30))]
-        result_raw_300 = [np.array(doc['features']) for doc in self.db.embedded_collection.aggregate(embedded_pipeline(log, 300))]
-        
-        # get thirty sec and five min aggregated features
-        thirty_sec_features = list(self.db.log_collection.aggregate(thirthy_sec_pipeline(log)))[0]
+        try:    
+            result_raw_30 = [np.array(doc['features']) for doc in self.db.embedded_collection.aggregate(embedded_pipeline(log, 30))]
+            result_raw_300 = [np.array(doc['features']) for doc in self.db.embedded_collection.aggregate(embedded_pipeline(log, 300))]
+            
+            # get thirty sec and five min aggregated features
+            thirty_sec_features = list(self.db.log_collection.aggregate(thirthy_sec_pipeline(log)))[0]
 
-        five_min_features = list(self.db.log_collection.aggregate(five_min_pipeline(log)))[0]
+            five_min_features = list(self.db.log_collection.aggregate(five_min_pipeline(log)))[0]
 
-        # compute averages of embedded features
-        average_features_30 = np.mean(result_raw_30, axis=0)
-        average_features_300 = np.mean(result_raw_300, axis=0)
+            # compute averages of embedded features
+            average_features_30 = np.mean(result_raw_30, axis=0)
+            average_features_300 = np.mean(result_raw_300, axis=0)
+            
+            # we need all thirty sec embeds
+            thirty_sec_avg_embeds = self.ml_pipeline.transform_features(average_features_30)
+            # we only need number 5 and 6
+            five_min_avg_embeds = self.ml_pipeline.transform_features(average_features_300)[4:6]
+            
+            features_dict = construct_features(thirty_sec_features, five_min_features,
+                                                thirty_sec_avg_embeds, five_min_avg_embeds)
+        except Exception as e:
+            logger.error(f'Failed fetching history from DB \n {e}')
         
-        # we need all thirty sec embeds
-        thirty_sec_avg_embeds = self.ml_pipeline.transform_features(average_features_30)
-        # we only need number 5 and 6
-        five_min_avg_embeds = self.ml_pipeline.transform_features(average_features_300)[4:6]
-        
-        features_dict = construct_features(thirty_sec_features, five_min_features,
-                                               thirty_sec_avg_embeds, five_min_avg_embeds)
-        
-        
+        logger.info('Fetched history from database')
         return features_dict
     
         

@@ -3,8 +3,12 @@ import pickle
 import joblib
 import numpy as np
 from typing import List
+import logging
+
 from project.config.settings import settings
 from src.data.features.event_feature_extractor import EventFeatureExtractor
+
+logger = logging.getLogger(__name__)
 
 class MlPipeline:
     def __init__(self, 
@@ -23,14 +27,14 @@ class MlPipeline:
             
         with open(pca_path, 'rb') as f:
             self.pca_model = joblib.load(f)
-            # logger.info("PCA model loaded successfully")
+            logger.info("PCA model loaded successfully")
             
         if not os.path.exists(xgboost_path):
             raise FileNotFoundError(f"XGBoost model file not found at: {xgboost_path}")
             
         with open(xgboost_path, 'rb') as f:
             self.xgboost_model = pickle.load(f)
-            # logger.info("XGBoost model loaded successfully")
+            logger.info("XGBoost model loaded successfully")
             
             
     def transform_features(self, features: np.ndarray) -> np.ndarray:
@@ -41,7 +45,7 @@ class MlPipeline:
             transformed_features = self.pca_model.transform([features])
             return transformed_features[0]
         except Exception as e:
-            # logger.error(f"Error transforming features: {str(e)}")
+            logger.error(f"Error transforming features: {str(e)}")
             raise
         
     def predict(self, features: List[float]) -> int:
@@ -54,5 +58,5 @@ class MlPipeline:
             prediction = self.xgboost_model.predict(features_array)
             return int(prediction[0])
         except Exception as e:
-            # logger.error(f"Prediction error: {str(e)}")
+            logger.error(f"Prediction error: {str(e)}")
             raise RuntimeError(f"Error making prediction: {str(e)}")
