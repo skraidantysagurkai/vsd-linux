@@ -3,7 +3,7 @@ import pickle
 import joblib
 import numpy as np
 from typing import List
-from config.settings import settings
+from project.config.settings import settings
 from src.data.features.event_feature_extractor import EventFeatureExtractor
 
 class MlPipeline:

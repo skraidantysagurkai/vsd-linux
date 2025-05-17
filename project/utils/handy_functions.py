@@ -3,6 +3,8 @@ Functions for log operations
 '''
 
 from typing import List
+from numpy.typing import NDArray
+import numpy as np
 
 def add_full_command_to_log(log:dict)-> dict:
     command = log['command']
@@ -42,7 +44,7 @@ def construct_features(thirty_sec_features, five_min_features,
     
         return features
     
-def add_current_embeds_to_features(features:dict, current_embed:List) -> dict:
+def add_current_embeds_to_features(features:dict, current_embed:NDArray[np.float64]) -> dict:
         features['cur_event_avg_embedded_command_0'] = current_embed[0]
         features['cur_event_avg_embedded_command_6'] = current_embed[6]
         features['cur_event_avg_embedded_command_9'] = current_embed[9]

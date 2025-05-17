@@ -1,6 +1,6 @@
 from typing import List
 
-def embeded_pipeline(log: dict, time: int) -> List[dict]:
+def embedded_pipeline(log: dict, time: int) -> List[dict]:
     pipeline = [
         {"$match": {
             "uid": log["uid"],
