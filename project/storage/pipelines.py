@@ -22,6 +22,7 @@ def thirthy_sec_pipeline(log: dict):
         }},
         {"$group": {
             "_id": None,
+            "unique_pids": {"$addToSet": "$pid"},
             "log_count": {"$sum": 1},
             "success_rate": {"$avg": "$success"},
             "total": {"$sum": 1},
@@ -38,7 +39,8 @@ def thirthy_sec_pipeline(log: dict):
                     {"$divide": ["$bash_commands", "$log_count"]},
                     0
                 ]
-        }
+            },
+            "unique_pid_count": {"$size":"$unique_pids"}
         }}
     ]
     

@@ -5,8 +5,11 @@ from paths import MODEL_DIR
 class Settings(BaseSettings):
     MONGODB_URL: str = "mongodb://localhost:27017/"
     MONGODB_DB_NAME: str = "kursinis"
-    MONGODB_LOG_COLLECTION: str = "logs"
-    MONGODB_EMBEDDED_COLLECTION: str = "embedded_logs"
+    # MONGODB_LOG_COLLECTION: str = "logs"
+    # MONGODB_EMBEDDED_COLLECTION: str = "embedded_logs"
+    # for testing
+    MONGODB_LOG_COLLECTION: str = "logs_empty"
+    MONGODB_EMBEDDED_COLLECTION: str = "embeds_empty"
     
     EMBEDDING_DIM: int = 768
     

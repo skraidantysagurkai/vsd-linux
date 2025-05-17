@@ -29,10 +29,10 @@ class PredictionAPI:
         
             log_dict = add_full_command_to_log(log_dict)
             
-            self.db.insert_into_db(log_dict, 'regular')
+            # self.db.insert_into_db(log_dict, 'regular')
             
             current_embed = self.ml_pipeline.feature_extractor.embed_command([log_dict['full_command']])
-            current_embed = self.ml_pipeline.transform_features(current_embed)
+            current_embed = self.ml_pipeline.transform_features(current_embed[0])
             
             features = self.get_features_history(log_dict)
             
@@ -53,9 +53,10 @@ class PredictionAPI:
         result_raw_300 = [np.array(doc['features']) for doc in self.db.embedded_collection.aggregate(embedded_pipeline(log, 300))]
         
         # get thirty sec and five min aggregated features
-        thirty_sec_features = self.db.log_collection.aggregate(thirthy_sec_pipeline(log))
-        five_min_features = self.db.log_collection.aggregate(five_min_pipeline(log))
-        
+        thirty_sec_features = list(self.db.log_collection.aggregate(thirthy_sec_pipeline(log)))[0]
+
+        five_min_features = list(self.db.log_collection.aggregate(five_min_pipeline(log)))[0]
+
         # compute averages of embedded features
         average_features_30 = np.mean(result_raw_30, axis=0)
         average_features_300 = np.mean(result_raw_300, axis=0)

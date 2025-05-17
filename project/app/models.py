@@ -12,7 +12,7 @@ from typing import List, Optional
     
     
 class Log(BaseModel):
-    timestamp: str
+    timestamp: float
     success: int
     uid: str
     euid: str 

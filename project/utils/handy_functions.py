@@ -34,10 +34,10 @@ def construct_features(thirty_sec_features, five_min_features,
             'thirty_sec_avg_embedded_command_1': thirty_sec_avg_embeds[1],
             'thirty_sec_success_rate': thirty_sec_features['success_rate'],
             'thirty_sec_avg_embedded_command_6': thirty_sec_avg_embeds[6],
-            'thirty_sec_unique_pids': thirty_sec_features['unique_pids'],
-            'five_min_avg_embedded_command_4': five_min_features[4],
+            'thirty_sec_unique_pids': thirty_sec_features['unique_pid_count'],
+            'five_min_avg_embedded_command_4': five_min_avg_embeds[0],
             'five_min_bash_count_rate': five_min_features['bash_ratio'],
-            'five_min_avg_embedded_command_5': five_min_avg_embeds[5],
+            'five_min_avg_embedded_command_5': five_min_avg_embeds[1],
             'five_min_success_rate': five_min_features['success_rate'],
             'five_min_log_count': five_min_features['log_count']
         }
