@@ -44,12 +44,12 @@ class Database:
     def insert_into_db(self, data:dict, type:str):
         if type == 'regular':
             self.log_collection.insert_one(data)
-            logger.info('Log inserted into regular database')
+            # logger.info('Log inserted into regular database')
             return
             
         if type == 'embedded':
             self.embedded_collection.insert_one(data)
-            logger.info('Log inserted into regular database')
+            # logger.info('Log inserted into regular database')
             return
         
         

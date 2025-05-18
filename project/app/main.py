@@ -4,7 +4,7 @@ import json
 import logging
 
 from project.logger_setup import setup_logger
-from project.app.models import Log
+from project.app.models import Log, TestingLog
 from project.ml.pipeline import MlPipeline
 from project.storage.database import Database
 from project.utils.handy_functions import FeatureManager as fm
@@ -34,25 +34,69 @@ class PredictionAPI:
             log_dict = fm.add_full_command_to_log(log_dict)
             
             # for testing purposes
-            # self.db.insert_into_db(log_dict, 'regular')
-            logger.info("Embedding recieved logs command")
+            self.db.insert_into_db(log_dict, 'regular')
+            # logger.info("Embedding recieved logs command")
             current_embed = self.ml_pipeline.feature_extractor.embed_command([log_dict['full_command']])
+            
+            self.db.insert_into_db({'uid':log_dict['uid'], 'timestamp':log_dict['timestamp'], 'features':[float(x) for x in current_embed[0]]}, 'embedded') 
             current_embed = self.ml_pipeline.transform_features(current_embed[0])
             
-            logger.info('Getting features')
+            # logger.info('Getting features')
             features = self.get_features_history(log_dict)
             
             full_feature_dict = fm.add_current_embeds_to_features(features, current_embed)
             
             features_list = fm.unpack_features_to_list(full_feature_dict)
             
-            logger.info('Predicting log maliciousness')
+            # logger.info('Predicting log maliciousness')
             prediction = self.ml_pipeline.predict(features_list)
 
             logger.info(f'XGBOOST PREDICTION {prediction}')
-            full_user_history = self.db.get_user_complete_history(log_dict)
-            llm_response = self.llm.classify_log(log=log_dict, user_history=full_user_history)
-                
+            
+            if prediction == 1:
+                full_user_history = self.db.get_user_complete_history(log_dict)
+                llm_response = self.llm.classify_log(log=log_dict, user_history=full_user_history)
+                if llm_response == 1:
+                    logger.warning("MALICIOUS COMMAND DETECTED!")
+            
+            return
+        
+        
+        @self.app.post("/debug")
+        def predict(item: TestingLog):
+            
+            item_dict = json.loads(item.model_dump_json())
+            
+            
+            log_dict = item_dict['content']
+            # logger.info("Recieved log")
+            log_dict = fm.add_full_command_to_log(log_dict)
+            
+            # for testing purposes
+            self.db.insert_into_db(log_dict, 'regular')
+            # logger.info("Embedding recieved logs command")
+            current_embed = self.ml_pipeline.feature_extractor.embed_command([log_dict['full_command']])
+            
+            self.db.insert_into_db({'uid':log_dict['uid'], 'timestamp':log_dict['timestamp'], 'features':[float(x) for x in current_embed[0]]}, 'embedded') 
+            current_embed = self.ml_pipeline.transform_features(current_embed[0])
+            
+            # logger.info('Getting features')
+            features = self.get_features_history(log_dict)
+            
+            full_feature_dict = fm.add_current_embeds_to_features(features, current_embed)
+            
+            features_list = fm.unpack_features_to_list(full_feature_dict)
+            
+            # logger.info('Predicting log maliciousness')
+            prediction = self.ml_pipeline.predict(features_list)
+            logger.info(f'TARGET: {item_dict["target"]}')
+            logger.info(f'XGBOOST PREDICTION {prediction}')
+            
+            if prediction == 1:
+                full_user_history = self.db.get_user_complete_history(log_dict)
+                llm_response = self.llm.classify_log(log=log_dict, user_history=full_user_history)
+                if llm_response == 1:
+                    logger.warning("MALICIOUS COMMAND DETECTED!")
             
             return
     

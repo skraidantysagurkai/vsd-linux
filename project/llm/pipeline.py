@@ -13,6 +13,8 @@ If the command is malicious answer with 1, if not answer with 0. There can only 
 The answer should be only a number, without any additional text or explanation.
 """
 
+NEW_PROMPT = "Can you tell how long this message is in tokens?"
+
 class LLM():
     def __init__(self):
         self.model_name = settings.LLM_MODEL
@@ -25,8 +27,6 @@ class LLM():
         
     def classify_log(self, log:dict, user_history: List[dict]) -> dict:
         prompt = construct_prompt(log, user_history)
-        
-        logger.info(f'PROMPT:\n{prompt}')
         
         response = self.client.chat.completions.create(
             model=self.model_name,
