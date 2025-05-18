@@ -24,7 +24,9 @@ class LLM():
         )
         
     def classify_log(self, log:dict, user_history: List[dict]) -> dict:
-        prompt = 
+        prompt = construct_prompt(log, user_history)
+        
+        logger.info(f'PROMPT:\n{prompt}')
         
         response = self.client.chat.completions.create(
             model=self.model_name,

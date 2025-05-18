@@ -17,28 +17,29 @@ class Database:
         
     def get_embedded_features(self, pipeline:List) -> List[np.ndarray]:
         result = self.embedded_collection.aggregate(pipeline)
-        
-        if not list(result):
+        result_list = list(result)
+        if not result_list:
             logger.warning('No embedded hisotry found in database')
             return np.zeros((1, settings.EMBEDDING_DIM))
     
-        array_of_embeds = [np.array(doc['features']) for doc in result]
+        array_of_embeds = [np.array(doc['features']) for doc in result_list]
         
         return array_of_embeds
     
     
     def get_regular_features(self, pipeline:List[dict], time_window:int) -> List[Dict]:
+        # print(pipeline)
         result = self.log_collection.aggregate(pipeline)
-        
-        if not list(result):
+        result_list = list(result)
+        if not result_list:
             logger.warning('No log history found in the database')
             if time_window == 30:
-                return [{'log_count':0, 'success_rate':0, 
-                         'bash_ratio':0, 'unique_pid_count':0}]
+                return {'log_count':0, 'success_rate':0, 
+                         'bash_ratio':0, 'unique_pid_count':0}
             if time_window == 300:
-                return [{'log_count':0, 'success_rate':0, 'bash_ratio':0}]   
+                return {'log_count':0, 'success_rate':0, 'bash_ratio':0}
         
-        return list(result)
+        return result_list[0]
         
     def insert_into_db(self, data:dict, type:str):
         if type == 'regular':

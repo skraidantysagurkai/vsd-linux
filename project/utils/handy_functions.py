@@ -4,6 +4,7 @@ Functions for log operations
 
 from typing import List
 from numpy.typing import NDArray
+import os
 import numpy as np
 import logging
 
@@ -120,21 +121,9 @@ class FeatureManager:
                 features['cur_event_avg_embedded_command_1'],
                 features['cur_event_avg_embedded_command_8']
             ]
-            
-            
-def construct_prompt(log:dict, history:dict) -> str:
-    prompt = f"""
-    ## MAIN COMMAND
-    {log}
-    ## USER HISTORY
-    {history}
-    ## MAIN COMMAND DOCUMENTATION
-    {get_command_doc(log['command'])}
-    """
-    
-    return prompt
+                
 
-def command_doc(command:str) -> str:
+def get_command_doc(command:str) -> str:
     try:
         with open(os.path.join(DOCUMENTATION_DIR, f'{command}.txt')) as f:
             documentation = f.read()
@@ -143,4 +132,16 @@ def command_doc(command:str) -> str:
     except FileNotFoundError:
         logger.error(f"No {command} documentation file found")
         return 'No documentation'
+           
+            
+def construct_prompt(log:dict, history:dict) -> str:
+    prompt = f'''
+    ## MAIN COMMAND
+    {log}
+    ## USER HISTORY
+    {history}
+    ## MAIN COMMAND DOCUMENTATION
+    {get_command_doc(log['command'])}
+   '''
     
+    return prompt

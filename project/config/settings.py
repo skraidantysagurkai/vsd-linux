@@ -21,6 +21,6 @@ class Settings(BaseSettings):
     
     LLM_MODEL: str = 'openai/gpt-4o'
     LLM_ENDPOINT: str =  'https://models.github.ai/inference'
-    GITHUB_TOKEN: str = os.environ.get('GITHUB_MODELS_TOKEN')
+    GITHUB_TOKEN: str = str(os.environ.get('GITHUB_MODELS_TOKEN'))
     
 settings = Settings()

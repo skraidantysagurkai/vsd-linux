@@ -21,7 +21,6 @@ class Log(BaseModel):
     pid: str
     command: str
     arguments: Optional[List[str]]
-    is_bash: int
     CWD: Optional[str]
     
 class LogPrompt(BaseModel):

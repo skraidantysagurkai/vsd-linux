@@ -62,10 +62,9 @@ class PredictionAPI:
             result_raw_300 = self.db.get_embedded_features(embedded_pipeline(log, 300))
 
             # get thirty sec and five min aggregated features
-            thirty_sec_features = self.db.get_regular_features(thirthy_sec_pipeline(log), 30)[0]
-            
-            five_min_features = self.db.get_regular_features(five_min_pipeline(log), 300)[0]
-            
+            thirty_sec_features = self.db.get_regular_features(thirthy_sec_pipeline(log), 30)
+            five_min_features = self.db.get_regular_features(five_min_pipeline(log), 300)
+
             # compute averages of embedded features
             average_features_30 = np.mean(result_raw_30, axis=0)
             average_features_300 = np.mean(result_raw_300, axis=0)
@@ -78,8 +77,8 @@ class PredictionAPI:
             features_dict = fm.construct_features(thirty_sec_features, five_min_features,
                                                 thirty_sec_avg_embeds, five_min_avg_embeds)
         except Exception as e:
-            logger.error(f'Failed fetching history from DB \n {e}')
-            raise LookupError("Error idk")
+            logger.error(f'Failed fetching history from DB \n {e}', exc_info=True)
+            return
         
         logger.info('Fetched history from database')
         return features_dict

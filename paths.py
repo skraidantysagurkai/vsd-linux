@@ -8,4 +8,4 @@ MODEL_DIR = ROOT_DIR / "models"
 
 BASH_COMMANDS_PATH = ROOT_DIR / "bash_commands.json"
 
-DOCUMENTATION_DIR = ROOD_DIR / "linux_commands"
+DOCUMENTATION_DIR = ROOT_DIR / "linux_commands"
