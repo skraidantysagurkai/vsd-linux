@@ -31,7 +31,7 @@ class Database:
         result = self.log_collection.aggregate(pipeline)
         
         if not list(result):
-            logger.info('No log history found in the database')
+            logger.warning('No log history found in the database')
             if time_window == 30:
                 return [{'log_count':0, 'success_rate':0, 
                          'bash_ratio':0, 'unique_pid_count':0}]
@@ -51,3 +51,16 @@ class Database:
             logger.info('Log inserted into regular database')
             return
         
+        
+    def get_user_complete_history(self, log:dict) -> List[Dict]:
+        query = {
+            "uid": log["uid"],
+            "timestamp": {"$gte": log['timestamp'] - 30, "$lte": log['timestamp']}
+        }
+        
+        results = self.log_collection.find(query)
+        
+        if not list(results):
+            return []
+        
+        return list(results)

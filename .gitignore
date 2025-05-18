@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 *.pyo
 log_data/
+linux_commands/*.txt
