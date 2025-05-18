@@ -3,19 +3,21 @@ import numpy as np
 import json
 import logging
 
+from project.logger_setup import setup_logger
 from project.app.models import Log
 from project.ml.pipeline import MlPipeline
-from project.storage.database import db
+from project.storage.database import Database
 from project.utils.handy_functions import *
 from project.storage.pipelines import embedded_pipeline, thirthy_sec_pipeline, five_min_pipeline
 
+setup_logger()
 logger = logging.getLogger(__name__)
 
 class PredictionAPI:
     def __init__(self):
         self.app = FastAPI()
         self.ml_pipeline = MlPipeline()
-        self.db = db
+        self.db = Database()
         
         self.setup_routes()
         
@@ -51,18 +53,18 @@ class PredictionAPI:
     
     def get_features_history(self, log: dict) -> dict:
         try:    
-            result_raw_30 = [np.array(doc['features']) for doc in self.db.embedded_collection.aggregate(embedded_pipeline(log, 30))]
-            result_raw_300 = [np.array(doc['features']) for doc in self.db.embedded_collection.aggregate(embedded_pipeline(log, 300))]
-            
+            result_raw_30 = self.db.get_embedded_features(embedded_pipeline(log, 30))
+            result_raw_300 = self.db.get_embedded_features(embedded_pipeline(log, 300))
+
             # get thirty sec and five min aggregated features
-            thirty_sec_features = list(self.db.log_collection.aggregate(thirthy_sec_pipeline(log)))[0]
-
-            five_min_features = list(self.db.log_collection.aggregate(five_min_pipeline(log)))[0]
-
+            thirty_sec_features = self.db.get_regular_features(thirthy_sec_pipeline(log), 30)[0]
+            
+            five_min_features = self.db.get_regular_features(five_min_pipeline(log), 300)[0]
+            
             # compute averages of embedded features
             average_features_30 = np.mean(result_raw_30, axis=0)
             average_features_300 = np.mean(result_raw_300, axis=0)
-            
+
             # we need all thirty sec embeds
             thirty_sec_avg_embeds = self.ml_pipeline.transform_features(average_features_30)
             # we only need number 5 and 6
@@ -72,6 +74,7 @@ class PredictionAPI:
                                                 thirty_sec_avg_embeds, five_min_avg_embeds)
         except Exception as e:
             logger.error(f'Failed fetching history from DB \n {e}')
+            raise LookupError("Error idk")
         
         logger.info('Fetched history from database')
         return features_dict

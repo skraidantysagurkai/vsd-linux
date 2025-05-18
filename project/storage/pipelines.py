@@ -14,7 +14,7 @@ def embedded_pipeline(log: dict, time: int) -> List[dict]:
     
     return pipeline
 
-def thirthy_sec_pipeline(log: dict):
+def thirthy_sec_pipeline(log: dict) -> List[dict]:
     thirty_sec_pipeline= [
         {"$match": {
             "uid": log["uid"],
@@ -46,7 +46,7 @@ def thirthy_sec_pipeline(log: dict):
     
     return thirty_sec_pipeline
 
-def five_min_pipeline(log: dict):
+def five_min_pipeline(log: dict) -> List[dict]:
     five_min_pipeline = [
         {"$match": {
             "uid": log["uid"],

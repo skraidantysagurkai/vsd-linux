@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from typing import List, Optional
+from typing import List, Optional, Dict
 import numpy as np
 import logging
 
@@ -18,21 +18,25 @@ class Database:
     def get_embedded_features(self, pipeline:List) -> List[np.ndarray]:
         result = self.embedded_collection.aggregate(pipeline)
         
-        if not result:
+        if not list(result):
             logger.warning('No embedded hisotry found in database')
-            return np.zeros((1, settings.EMBEDDING_DIM))[0]  
+            return np.zeros((1, settings.EMBEDDING_DIM))
     
         array_of_embeds = [np.array(doc['features']) for doc in result]
         
         return array_of_embeds
     
     
-    def get_regular_features(self, pipeline:List) -> Optional[List]:
+    def get_regular_features(self, pipeline:List[dict], time_window:int) -> List[Dict]:
         result = self.log_collection.aggregate(pipeline)
         
-        if not result:
-            logger.warning('No log history found in the database')
-            return 
+        if not list(result):
+            logger.info('No log history found in the database')
+            if time_window == 30:
+                return [{'log_count':0, 'success_rate':0, 
+                         'bash_ratio':0, 'unique_pid_count':0}]
+            if time_window == 300:
+                return [{'log_count':0, 'success_rate':0, 'bash_ratio':0}]   
         
         return list(result)
         
@@ -44,7 +48,6 @@ class Database:
             
         if type == 'embedded':
             self.embedded_collection.insert_one(data)
-            logger.info('Log inserted into embedded database')
+            logger.info('Log inserted into regular database')
             return
         
-db = Database()
