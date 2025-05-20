@@ -1,0 +1,1 @@
+In this directory scrapped linux commands ar stored to use for LLM context.
