@@ -7,8 +7,9 @@ from numpy.typing import NDArray
 import os
 import numpy as np
 import logging
+import json
 
-from paths import DOCUMENTATION_DIR, BASH_COMMANDS_PATH
+from paths import DOCUMENTATION_DIR, BASH_COMMANDS_PATH, TESTING_RES_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -145,3 +146,12 @@ def construct_prompt(log:dict, history:dict) -> str:
    '''
     
     return prompt
+
+
+def save_response_to_file(target: int, xgboost_prediction: int, llm_prediction: int) -> None:
+    response_json = {'target': target, 'xgboost_prediction': xgboost_prediction, 'llm_prediction': llm_prediction}
+    # change file name according to the json file
+    filename = os.path.join(TESTING_RES_DIR, f'31-December.json')
+    try:
+        with open(filename, 'w') as f:
+            json.dump(response_json, f)

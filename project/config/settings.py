@@ -1,6 +1,6 @@
 from pydantic_settings import BaseSettings
 import os
-from paths import MODEL_DIR
+from paths import MODEL_DIR, KEY_PATH
 
 class Settings(BaseSettings):
     MONGODB_URL: str = 'mongodb://localhost:27017/'
@@ -21,7 +21,8 @@ class Settings(BaseSettings):
     
     LLM_MODEL: str = 'openai/gpt-4o'
     LLM_ENDPOINT: str =  'https://models.github.ai/inference'
-    # GITHUB_TOKEN: str = str(os.environ.get('GITHUB_MODELS_TOKEN'))
-    GITHUB_TOKEN: str = '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'
+    
+    with open(KEY_PATH, 'r') as f:
+        GITHUB_TOKEN: str = f.read().strip()
     
 settings = Settings()
