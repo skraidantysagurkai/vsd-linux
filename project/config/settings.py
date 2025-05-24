@@ -13,16 +13,12 @@ class Settings(BaseSettings):
     
     EMBEDDING_DIM: int = 768
     
-    PCA_MODEL_PATH: str = os.path.join(MODEL_DIR, 'pca_model.pkl')
+    PCA_MODEL_PATH: str = os.path.join(MODEL_DIR, 'pca_gpu.pkl')
     XGBOOST_MODEL_PATH: str = os.path.join(MODEL_DIR, 'xgboost_model.pkl')
     
     LOG_LEVEL: str = 'INFO'
     DOCUMENTATION_PATH: str = ''
     
-    LLM_MODEL: str = 'openai/gpt-4o'
-    LLM_ENDPOINT: str =  'https://models.github.ai/inference'
-    
-    with open(KEY_PATH, 'r') as f:
-        GITHUB_TOKEN: str = f.read().strip()
+    LLM_MODEL: str = 'Qwen/Qwen2.5-Coder-3B-Instruct'
     
 settings = Settings()

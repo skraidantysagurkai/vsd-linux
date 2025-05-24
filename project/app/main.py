@@ -8,9 +8,9 @@ from project.app.models import Log, TestingLog
 from project.ml.pipeline import MlPipeline
 from project.storage.database import Database
 from project.utils.handy_functions import FeatureManager as fm
-from project.storage.handy_functions import save_response_to_file
 from project.storage.pipelines import embedded_pipeline, thirthy_sec_pipeline, five_min_pipeline
 from project.llm.pipeline import LLM
+import cupy as cp
 
 setup_logger()
 logger = logging.getLogger(__name__)
@@ -31,16 +31,17 @@ class PredictionAPI:
             -> get log's user command history features -> construct feature list -> predict 
             """
             log_dict = json.loads(log.model_dump_json())
-            logger.info("Recieved log")
+            logger.info("Received log")
             log_dict = fm.add_full_command_to_log(log_dict)
             
             # for testing purposes
             self.db.insert_into_db(log_dict, 'regular')
-            # logger.info("Embedding recieved logs command")
             current_embed = self.ml_pipeline.feature_extractor.embed_command([log_dict['full_command']])
             
-            self.db.insert_into_db({'uid':log_dict['uid'], 'timestamp':log_dict['timestamp'], 'features':[float(x) for x in current_embed[0]]}, 'embedded') 
-            current_embed = self.ml_pipeline.transform_features(current_embed[0])
+            self.db.insert_into_db({'uid':log_dict['uid'], 'timestamp':log_dict['timestamp'], 'features':[float(x) for x in current_embed[0]]}, 'embedded')
+            current_embed = cp.asarray(current_embed.astype(np.float16)).reshape(1, -1)
+            current_embed = self.ml_pipeline.transform_features(current_embed).get()[0]
+
             
             # logger.info('Getting features')
             features = self.get_features_history(log_dict)
@@ -50,58 +51,60 @@ class PredictionAPI:
             features_list = fm.unpack_features_to_list(full_feature_dict)
             
             # logger.info('Predicting log maliciousness')
-            prediction = self.ml_pipeline.predict(features_list)
+            prediction = self.ml_pipeline.predict(cp.asarray(features_list).reshape(1, -1))
 
             logger.info(f'XGBOOST PREDICTION {prediction}')
-            
+
+
             if prediction == 1:
                 full_user_history = self.db.get_user_complete_history(log_dict)
-                llm_response = self.llm.classify_log(log=log_dict, user_history=full_user_history)
-                if llm_response == 1:
+                llm_response_label, llm_response_reason = self.llm.classify_log(log=log_dict, user_history=full_user_history)
+                if llm_response_label == 1:
                     logger.warning("MALICIOUS COMMAND DETECTED!")
-            
-            return
-        
-        
-        @self.app.post("/testing")
-        def predict(item: TestingLog):
-            
-            item_dict = json.loads(item.model_dump_json())
-            
-            
-            log_dict = item_dict['content']
-            # logger.info("Recieved log")
-            log_dict = fm.add_full_command_to_log(log_dict)
-            
-            # for testing purposes
-            self.db.insert_into_db(log_dict, 'regular')
-            # logger.info("Embedding recieved logs command")
-            current_embed = self.ml_pipeline.feature_extractor.embed_command([log_dict['full_command']])
-            
-            self.db.insert_into_db({'uid':log_dict['uid'], 'timestamp':log_dict['timestamp'], 'features':[float(x) for x in current_embed[0]]}, 'embedded') 
-            current_embed = self.ml_pipeline.transform_features(current_embed[0])
-            
-            # logger.info('Getting features')
-            features = self.get_features_history(log_dict)
-            
-            full_feature_dict = fm.add_current_embeds_to_features(features, current_embed)
-            
-            features_list = fm.unpack_features_to_list(full_feature_dict)
-            
-            # logger.info('Predicting log maliciousness')
-            prediction = self.ml_pipeline.predict(features_list)
-            logger.info(f'TARGET: {item_dict["target"]}')
-            logger.info(f'XGBOOST PREDICTION {prediction}')
-            
-            if prediction == 1:
-                full_user_history = self.db.get_user_complete_history(log_dict)
-                llm_response = self.llm.classify_log(log=log_dict, user_history=full_user_history)
+                    logger.warning(f"{llm_response_reason}")
+                    return 1
+                else:
+                    return 0
             else:
-                llm_response = None
-                    
-            save_response_to_file(item_dict['target'], prediction, llm_response)
-            
-            return
+                return 0
+        
+        
+        # @self.app.post("/testing")
+        # def predict(item: TestingLog):
+        #
+        #     item_dict = json.loads(item.model_dump_json())
+        #
+        #
+        #     log_dict = item_dict['content']
+        #     # logger.info("Recieved log")
+        #     log_dict = fm.add_full_command_to_log(log_dict)
+        #
+        #     # for testing purposes
+        #     self.db.insert_into_db(log_dict, 'regular')
+        #     # logger.info("Embedding recieved logs command")
+        #     current_embed = self.ml_pipeline.feature_extractor.embed_command([log_dict['full_command']])
+        #
+        #     self.db.insert_into_db({'uid':log_dict['uid'], 'timestamp':log_dict['timestamp'], 'features':[float(x) for x in current_embed[0]]}, 'embedded')
+        #     current_embed = self.ml_pipeline.transform_features(current_embed[0])
+        #
+        #     # logger.info('Getting features')
+        #     features = self.get_features_history(log_dict)
+        #
+        #     full_feature_dict = fm.add_current_embeds_to_features(features, current_embed)
+        #
+        #     features_list = fm.unpack_features_to_list(full_feature_dict)
+        #
+        #     # logger.info('Predicting log maliciousness')
+        #     prediction = self.ml_pipeline.predict(features_list)
+        #     logger.info(f'TARGET: {item_dict["target"]}')
+        #     logger.info(f'XGBOOST PREDICTION {prediction}')
+        #
+        #     # if prediction == 1:
+        #     #     full_user_history = self.db.get_user_complete_history(log_dict)
+        #     #     llm_response = self.llm.classify_log(log=log_dict, user_history=full_user_history)
+        #     # else:
+        #     #     llm_response = None
+        #     return
     
     def get_features_history(self, log: dict) -> dict:
         try:    
@@ -113,14 +116,14 @@ class PredictionAPI:
             five_min_features = self.db.get_regular_features(five_min_pipeline(log), 300)
 
             # compute averages of embedded features
-            average_features_30 = np.mean(result_raw_30, axis=0)
-            average_features_300 = np.mean(result_raw_300, axis=0)
+            average_features_30 = cp.asarray(np.mean(result_raw_30, axis=0).astype(np.float16)).reshape(1, -1)
+            average_features_300 = cp.asarray(np.mean(result_raw_300, axis=0).astype(np.float16)).reshape(1, -1)
 
             # we need all thirty sec embeds
-            thirty_sec_avg_embeds = self.ml_pipeline.transform_features(average_features_30)
+            thirty_sec_avg_embeds = self.ml_pipeline.transform_features(average_features_30).get()[0]
             # we only need number 5 and 6
-            five_min_avg_embeds = self.ml_pipeline.transform_features(average_features_300)[4:6]
-            
+            five_min_avg_embeds = self.ml_pipeline.transform_features(average_features_300).get()[0][4:6]
+
             features_dict = fm.construct_features(thirty_sec_features, five_min_features,
                                                 thirty_sec_avg_embeds, five_min_avg_embeds)
         except Exception as e:
