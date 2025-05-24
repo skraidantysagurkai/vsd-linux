@@ -8,6 +8,7 @@ from project.app.models import Log, TestingLog
 from project.ml.pipeline import MlPipeline
 from project.storage.database import Database
 from project.utils.handy_functions import FeatureManager as fm
+from project.storage.handy_functions import save_response_to_file
 from project.storage.pipelines import embedded_pipeline, thirthy_sec_pipeline, five_min_pipeline
 from project.llm.pipeline import LLM
 
@@ -62,7 +63,7 @@ class PredictionAPI:
             return
         
         
-        @self.app.post("/debug")
+        @self.app.post("/testing")
         def predict(item: TestingLog):
             
             item_dict = json.loads(item.model_dump_json())
@@ -95,8 +96,10 @@ class PredictionAPI:
             if prediction == 1:
                 full_user_history = self.db.get_user_complete_history(log_dict)
                 llm_response = self.llm.classify_log(log=log_dict, user_history=full_user_history)
-                if llm_response == 1:
-                    logger.warning("MALICIOUS COMMAND DETECTED!")
+            else:
+                llm_response = None
+                    
+            save_response_to_file(item_dict['target'], prediction, llm_response)
             
             return
     
