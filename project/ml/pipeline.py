@@ -7,6 +7,9 @@ import logging
 
 from project.config.settings import settings
 from src.data.features.event_feature_extractor import EventFeatureExtractor
+import torch
+import cupy as cp
+import cuml
 
 logger = logging.getLogger(__name__)
 
@@ -14,11 +17,16 @@ class MlPipeline:
     def __init__(self, 
                  pca_path: str = settings.PCA_MODEL_PATH,
                  xgboost_path: str = settings.XGBOOST_MODEL_PATH):
+        self._check_cuda_availability()
         self.feature_extractor = EventFeatureExtractor()
         self.pca_model = None
         self.xgboost_model = None
         
         self._load_models(pca_path, xgboost_path)
+
+    @staticmethod
+    def _check_cuda_availability():
+        assert torch.cuda.is_available(), "CUDA is not available. Please check your PyTorch installation or GPU setup."
         
         
     def _load_models(self, pca_path: str, xgboost_path: str) -> None:
@@ -26,7 +34,7 @@ class MlPipeline:
             raise FileNotFoundError(f"PCA model file not found at: {pca_path}")
             
         with open(pca_path, 'rb') as f:
-            self.pca_model = joblib.load(f)
+            self.pca_model = pickle.load(f)
             logger.info("PCA model loaded successfully")
             
         if not os.path.exists(xgboost_path):
@@ -37,25 +45,23 @@ class MlPipeline:
             logger.info("XGBoost model loaded successfully")
             
             
-    def transform_features(self, features: np.ndarray) -> np.ndarray:
+    def transform_features(self, features: cp.array) -> cp.array:
         if self.pca_model is None:
             raise RuntimeError("PCA model not loaded")
             
         try:
-            transformed_features = self.pca_model.transform([features])
-            return transformed_features[0]
+            transformed_features = self.pca_model.transform(features)
+            return transformed_features
         except Exception as e:
             logger.error(f"Error transforming features: {str(e)}")
             raise
         
-    def predict(self, features: List[float]) -> int:
+    def predict(self, features: cp.array) -> np.array:
         if self.xgboost_model is None:
             raise RuntimeError("XGBoost model not loaded")
             
         try:
-            # Make prediction
-            features_array = np.array([features])
-            prediction = self.xgboost_model.predict(features_array)
+            prediction = self.xgboost_model.predict(features)
             return int(prediction[0])
         except Exception as e:
             logger.error(f"Prediction error: {str(e)}")
