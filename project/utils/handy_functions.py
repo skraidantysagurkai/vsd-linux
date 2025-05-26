@@ -81,7 +81,7 @@ class FeatureManager:
                 'five_min_bash_count_rate': five_min_features['bash_ratio'],
                 'five_min_success_rate' : five_min_features['success_rate'],
             }
-        
+
             return features
 
     @staticmethod
@@ -168,5 +168,5 @@ def save_response_to_file(target: int, xgboost_prediction: int, llm_prediction: 
     try:
         with open(filename, 'w') as f:
             json.dump(response_json, f)
-    except:
-        pass
+    except Exception as e:
+        logger.error(f"Error saving response to file {filename}: {e}")
