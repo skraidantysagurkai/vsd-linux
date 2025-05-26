@@ -21,13 +21,13 @@ class MlPipeline:
         self.feature_extractor = EventFeatureExtractor()
         self.pca_model = None
         self.xgboost_model = None
-        
+        self.threshold = 0.4
         self._load_models(pca_path, xgboost_path)
 
     @staticmethod
     def _check_cuda_availability():
         assert torch.cuda.is_available(), "CUDA is not available. Please check your PyTorch installation or GPU setup."
-        
+
         
     def _load_models(self, pca_path: str, xgboost_path: str) -> None:
         if not os.path.exists(pca_path):
@@ -61,8 +61,9 @@ class MlPipeline:
             raise RuntimeError("XGBoost model not loaded")
             
         try:
-            prediction = self.xgboost_model.predict(features)
-            return int(prediction[0])
+            # Make prediction
+            prediction = self.xgboost_model.predict_proba(features)[:, 1]  # Get probability of class 1
+            return int((prediction[0] >= self.threshold))
         except Exception as e:
             logger.error(f"Prediction error: {str(e)}")
             raise RuntimeError(f"Error making prediction: {str(e)}")

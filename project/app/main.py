@@ -67,8 +67,8 @@ class PredictionAPI:
                     return 0
             else:
                 return 0
-        
-        
+
+
         # @self.app.post("/testing")
         # def predict(item: TestingLog):
         #
@@ -120,9 +120,8 @@ class PredictionAPI:
             average_features_300 = cp.asarray(np.mean(result_raw_300, axis=0).astype(np.float16)).reshape(1, -1)
 
             # we need all thirty sec embeds
-            thirty_sec_avg_embeds = self.ml_pipeline.transform_features(average_features_30).get()[0]
-            # we only need number 5 and 6
-            five_min_avg_embeds = self.ml_pipeline.transform_features(average_features_300).get()[0][4:6]
+            thirty_sec_avg_embeds = self.ml_pipeline.transform_features(average_features_30).get()[0][[2, 6, 8]]
+            five_min_avg_embeds = self.ml_pipeline.transform_features(average_features_300).get()[0][5]
 
             features_dict = fm.construct_features(thirty_sec_features, five_min_features,
                                                 thirty_sec_avg_embeds, five_min_avg_embeds)
