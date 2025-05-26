@@ -68,6 +68,19 @@ class FeatureManager:
                 'five_min_success_rate': five_min_features['success_rate'],
                 'five_min_log_count': five_min_features['log_count']
             }
+
+            features = {
+                'thirty_sec_avg_embedded_command_2': thirty_sec_avg_embeds[0],
+                'thirty_sec_avg_embedded_command_6': thirty_sec_avg_embeds[1],
+                'thirty_sec_avg_embedded_command_8': thirty_sec_avg_embeds[2],
+                'thirty_sec_bash_count_rate': thirty_sec_features['bash_ratio'],
+                'thirty_sec_success_rate': thirty_sec_features['success_rate'],
+                'thirty_sec_unique_pids': thirty_sec_features['unique_pid_count'],
+
+                'five_min_avg_embedded_command_5': five_min_avg_embeds,
+                'five_min_bash_count_rate': five_min_features['bash_ratio'],
+                'five_min_success_rate' : five_min_features['success_rate'],
+            }
         
             return features
 
@@ -155,3 +168,5 @@ def save_response_to_file(target: int, xgboost_prediction: int, llm_prediction: 
     try:
         with open(filename, 'w') as f:
             json.dump(response_json, f)
+    except:
+        pass

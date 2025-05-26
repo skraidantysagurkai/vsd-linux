@@ -17,7 +17,7 @@ class MlPipeline:
         self.feature_extractor = EventFeatureExtractor()
         self.pca_model = None
         self.xgboost_model = None
-        
+        self.threshold = 0.4
         self._load_models(pca_path, xgboost_path)
         
         
@@ -55,7 +55,8 @@ class MlPipeline:
         try:
             # Make prediction
             features_array = np.array([features])
-            prediction = self.xgboost_model.predict(features_array)
+            prediction = self.xgboost_model.predict_proba(features_array)[:, 1]  # Get probability of class 1
+            prediction = (prediction >= self.threshold).astype(int)
             return int(prediction[0])
         except Exception as e:
             logger.error(f"Prediction error: {str(e)}")

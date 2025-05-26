@@ -116,10 +116,10 @@ class PredictionAPI:
             average_features_30 = np.mean(result_raw_30, axis=0)
             average_features_300 = np.mean(result_raw_300, axis=0)
 
-            # we need all thirty sec embeds
-            thirty_sec_avg_embeds = self.ml_pipeline.transform_features(average_features_30)
-            # we only need number 5 and 6
-            five_min_avg_embeds = self.ml_pipeline.transform_features(average_features_300)[4:6]
+
+            thirty_sec_avg_embeds = self.ml_pipeline.transform_features(average_features_30)[[1, 5, 7]]
+
+            five_min_avg_embeds = self.ml_pipeline.transform_features(average_features_300)[4]
             
             features_dict = fm.construct_features(thirty_sec_features, five_min_features,
                                                 thirty_sec_avg_embeds, five_min_avg_embeds)

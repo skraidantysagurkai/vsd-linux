@@ -1,9 +1,12 @@
+import pickle
+from typing import Dict, List
+
+import cupy as cp
 import numpy as np
 from joblib import Parallel, delayed
-from typing import Dict, List
+
 from src.shared.batch import batch_iterable
-import cupy as cp
-import pickle
+
 
 def get_labels():
     agg_feature_labels = [
@@ -16,7 +19,6 @@ def get_labels():
         'unique_pids',
     ]
     agg_command_labels = [f'avg_embedded_command_{i}' for i in range(10)]
-
 
     five_min_feature_labels = [f'five_min_{label}' for label in agg_feature_labels]
     thirty_sec_feature_labels = [f'thirty_sec_{label}' for label in agg_feature_labels]
@@ -31,16 +33,27 @@ def get_labels():
 
     return event_command_labels + event_feature_labels + thirty_sec_command_labels + thirty_sec_feature_labels + five_min_command_labels + five_min_feature_labels
 
+
 def get_selected_labels():
     labels = get_labels()
     idxs = [25, 15, 11, 18, 19, 20, 21, 16, 14, 13, 12, 26, 17, 0, 6, 27, 32, 42, 33, 9, 7, 4, 2, 43, 5, 38, 3, 1, 8]
     selected_labels = [labels[i] for i in idxs]
     return selected_labels
 
+
+def get_selected_labels_after_update():
+    labels = get_labels()
+    idxs = [25, 27, 33, 4, 1, 17, 19, 26, 42, 13, 7, 5, 6, 9, 43]
+    selected_labels = [labels[i] for i in idxs]
+    return selected_labels
+
+
 COLUMNS = ["timestamp", "success", "pid", "cwd_risk", "is_bash_command", "flag_count", "args_count", "embedded_command"]
 
+
 class DataAggregatorAccelerated:
-    def __init__(self, pca_path: str, num_jobs: int, window_sizes_sec: tuple = (30, 300), cpu_batch_size: int = 100, gpu_batch_size: int = 1000):
+    def __init__(self, pca_path: str, num_jobs: int, window_sizes_sec: tuple = (30, 300), cpu_batch_size: int = 100,
+                 gpu_batch_size: int = 1000):
         with open(pca_path, "rb") as f:
             self.pca = pickle.load(f)
         self.num_jobs = num_jobs
@@ -68,8 +81,7 @@ class DataAggregatorAccelerated:
             features.append([log[key] for key in keys])
         return np.array(features, dtype=np.float32), np.array(embedded_commands, dtype=np.float32), keys
 
-
-    def find_idx(self, timestamps): # This is quite fast
+    def find_idx(self, timestamps):  # This is quite fast
         log_indexes = []
 
         for idx, timestamp in enumerate(timestamps):
@@ -165,7 +177,8 @@ class DataAggregatorAccelerated:
             thirty_sec_transformed = cp.asnumpy(thirty_sec_transformed)
             current_event_arr = cp.asnumpy(current_event_arr)
 
-            for current_event, thirty_sec, five_min in zip(current_event_arr, thirty_sec_transformed, five_min_transformed,):
+            for current_event, thirty_sec, five_min in zip(current_event_arr, thirty_sec_transformed,
+                                                           five_min_transformed, ):
                 yield current_event, thirty_sec, five_min
 
     @staticmethod
@@ -205,7 +218,7 @@ class DataAggregatorAccelerated:
             return []
         window_idxs = self.find_idx(features[:, self.keys.get('timestamp')])
         for commands, features in zip(
-            self.process_commands(embedded_commands, window_idxs),
-            self.process_events(features, window_idxs)
+                self.process_commands(embedded_commands, window_idxs),
+                self.process_events(features, window_idxs)
         ):
             yield self.construct_feature_vector(features, commands).tolist()
