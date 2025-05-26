@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     EMBEDDING_DIM: int = 768
     
     PCA_MODEL_PATH: str = os.path.join(MODEL_DIR, 'pca_gpu.pkl')
-    XGBOOST_MODEL_PATH: str = os.path.join(MODEL_DIR, 'xgboost_model.pkl')
+    XGBOOST_MODEL_PATH: str = os.path.join(MODEL_DIR, 'xgboost_retrained.pkl')
     
     LOG_LEVEL: str = 'INFO'
     DOCUMENTATION_PATH: str = ''
